@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+</head>
+<body>
+    <form action="login" method="post">
+        {{ form.nickname.label }}<br>
+        {{ form.nickname }}<br>
+        
+        {{ form.password.label }}<br>
+        {{ form.password }}<br>
+
+        {{ form.email.label }}<br>
+        {{ form.email }}<br>
+
+        {{ form.submit }}
+    </form>
+    <h1>200login</h1>
+</body>
+</html>
