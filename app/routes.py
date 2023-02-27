@@ -1,13 +1,29 @@
-from app.db_controls import add_new_item, check_if_user_exists, session
-from app.db_model import User
+from app.db_controls import add_new_item, check_if_user_exists, get_events_by, session
+from app.db_model import Event, User
 from . import app, login_manager
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, jsonify, make_response, redirect, render_template, request, url_for
 from .forms import LoginForm, SignupForm
 from flask_login import LoginManager, current_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
+@app.route("/create_event", methods=["POST"])
+def create_event():
+    data_from_request = request.get_json()
+    data_from_request["user"] = current_user.id
+    event = Event(**data_from_request)
+    add_new_item(event)
+    response = make_response() 
+    response.status_code = 200
+    return response
+
+
+
+@app.route("/get_events_by_date/<date>", methods=["GET"])
+def get_events_by_date(date):
+    return jsonify({"test": "test"}) 
+    # return get_events_by(date)
 
 @app.route("/")
 @app.route("/main")
