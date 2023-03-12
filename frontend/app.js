@@ -63,10 +63,6 @@ window.onload = (event) => {
     const signupForm = document.getElementById("signup-form");
     const loginForm = document.getElementById("login-form");
 
-    if (eventForm) {
-        sendRequestToServer(eventForm, urlAddEvent);
-    }
-
     function sendRequestToServer (form, url) {
 
         form.addEventListener("submit", (event) => {

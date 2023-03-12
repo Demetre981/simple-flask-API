@@ -1,9 +1,10 @@
-import json
-from flask import jsonify
 from .database import session, User, Event
+from flask import jsonify
+import json
 
-def create_json_from(object):
-    event_dict = object.__dict__
+
+def create_json_from(obj):
+    event_dict = obj.__dict__
 
     # Видаляємо ключ "_sa_instance_state", який додає SQLAlchemy
     event_dict.pop('_sa_instance_state', None)
@@ -16,7 +17,7 @@ def create_json_from(object):
     return json_string
 
 
-def commit_new_item(obj):
+def add_new_item(obj):
     session.add(obj)
     session.commit()
 
@@ -27,9 +28,9 @@ def check_if_user_exist(nickname: str):
 
 
 def get_events_by(date):
-    events = session.query(Event).filter(Event.date == date, Event.user == user).all()
+    events = session.query(Event).all() #.filter(Event.date == date, Event.user == user)
     jsonified_events = []
     for event in events:
-        print(event)
         jsonified_events.append(create_json_from(event))
     return jsonified_events
+

@@ -1,4 +1,3 @@
-import json
 import requests
 from datetime import datetime
 from app import app
@@ -6,7 +5,7 @@ from flask import jsonify
 from app import login_manager
 from app.forms import LoginForm, SignupForm
 from app.database import User, Event, session
-from .db_controls import commit_new_item, get_events_by
+from .db_controls import add_new_item, get_events_by
 from flask import render_template, request, redirect, make_response
 from flask_login import login_user, login_required, logout_user, current_user
 
@@ -24,7 +23,7 @@ def add_event_to_database(event_data):
     event_data["date"] = convert_date_to_object(event_data["date"])
     event_data["user"] = 1
     event = Event(**event_data)
-    commit_new_item(event)
+    add_new_item(event)
 
 
 def create_response(status_code):
@@ -49,17 +48,17 @@ def create_event():
 
 @app.route("/get_events_by_date/<date>", methods=["GET"])
 def get_events_by_date(date):
+    print(date)
     date = datetime.fromisoformat(date)
     data = get_events_by(date)
-    response = make_response(jsonify(data))
+    response = make_response(data)
     return response
-    # return get_events_by(date)
 
 
 @app.route("/")
 @app.route("/main")
 def index():
-    return render_template("index.html")
+    return render_template("main.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
