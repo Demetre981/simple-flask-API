@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign up</title>
-    <script src="app.js" type="module"></script>
 </head>
 <body>
-    <form method="post" id="signup-form">
-        <label for="nickname">Nickname</label><br>
-        <input type="text" id="nickname" name="nickname" required><br>
+<h3>Sign up</h3>
+<form action="signup" method="post">
+  <label for="nickname">Nickname</label><br>
+  <input type="text" id="nickname" name="nickname" autofocus=""><br>
 
-        <label for="password">Password</label><br>
-        <input type="text" id="password" name="password" required><br>
+  <label for="email">Email</label><br>
+  <input type="text" id="email" name="email" autofocus=""><br>
 
-        <label for="email">Email</label><br>
-        <input type="email" id="email" name="email" required><br>
+  <label for="password">Password</label><br>
+  <input type="text" id="password" name="password"><br>
 
-        <input type="submit" value="Sign up">
-
-    </form>
+  <input type="submit" value="Sign up">
+</form>
 </body>
 </html>

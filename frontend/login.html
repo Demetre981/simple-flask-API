@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <script src="app.js" type="module"></script>
 </head>
 <body>
-    <form method="post" id="login-form">
+    <form action="login" method="post">
         <label for="nickname">Nickname</label><br>
-        <input type="text" id="nickname" name="nickname" required><br>
+        <input type="text" id="nickname" name="nickname" autofocus=""><br>
 
         <label for="password">Password</label><br>
-        <input type="text" id="password" name="password" required><br>
+        <input type="text" id="password" name="password"><br>
 
-        <input type="submit" value="Log in">
+        <input type="submit" value="Login">
     </form>
 </body>
 </html>

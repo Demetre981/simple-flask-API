@@ -26,21 +26,42 @@ window.onload = (event) => {
         const eventForm = document.getElementById("event-form");
         const urlAddEvent = 'http://127.0.0.1:5000/create_event';
         const date = new Date().toISOString();
-
+        console.log(eventForm)
         getEventsByDate(date);
-    }
+
+        eventForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            console.log(event)
+
+            sendRequestToServer(eventForm, urlAddEvent);
+    })}
 
     function loginHandler () {
+        const loginForm = document.getElementById("login-form");
+        const urlLogin = 'http://127.0.0.1:5000/login';
         console.log("Login")
+
+        loginform.addEventListener("submit", (event) => {
+            event.preventDefault();
+            console.log(event)
+
+            sendRequestToServer(eventForm, urlAddEvent);
+    })
     }
 
     function signupHandler () {
-        console.log("Signup")
+        const signupForm = document.getElementById("signup-form");
+        const urlSignup = 'http://127.0.0.1:5000/signup';
+        console.log("Login")
+
+        signupform.addEventListener("submit", (event) => {
+            event.preventDefault();
+            console.log(event)
+
+            sendRequestToServer(eventForm, urlAddEvent);
+    })
     }
 
-
-    const urlLogin = 'http://127.0.0.1:5000/login';
-    const urlSignup = 'http://127.0.0.1:5000/signup';
 
 
     function getEventsByDate (date) {
@@ -57,24 +78,19 @@ window.onload = (event) => {
           });
     }
 
-
-
-
     const signupForm = document.getElementById("signup-form");
-    const loginForm = document.getElementById("login-form");
 
     function sendRequestToServer (form, url) {
 
-        form.addEventListener("submit", (event) => {
-        event.preventDefault();
-
         const formData = new FormData(form);
         const data = {};
+        console.log(formData)
 
         for (const[key, value] of formData.entries()) {
             data[key] = value;
+            console.log(key, value)
         }
-
+        console.log(data)
         fetch(url, {
             method: "POST",
             headers: {"Content-type": "application/json"},
@@ -82,7 +98,5 @@ window.onload = (event) => {
         })
         .then(data => console.log(data))
         .catch(error => console.error('Помилка:', error));
-    })
     }
 }
-

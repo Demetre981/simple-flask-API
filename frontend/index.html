@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TEST</title>
-    <script src="app.js" type="module"></script>
+    <title>Test</title>
 </head>
 <body>
-<form method="post" id="event-form">
-    <label>Date</label>
-    <input type="date" name="date"><br>
+<script src="app.js" type="module"></script>
+    <form method="post" id="event-form">
+        <label for="date">Date</label><br>
+        <input type="date" id="date" name="date"><br>
 
-    <label>Time</label>
-    <input type="time" name="time"><br>
+        <label for="time">Time</label><br>
+        <input type="time" id="time" name="time"><br>
 
-    <label>Header</label>
-    <input type="text" name="header"><br>
+        <label for="header">Header</label><br>
+        <input type="text" id="header" name="header"><br>
 
-    <label>Description</label>
-    <textarea name="description"></textarea><br>
+        <label for="description">Description</label><br>
+        <input type="text" id="description" name="description"><br>
 
-    <input type="submit" value="ADD">
-</form>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

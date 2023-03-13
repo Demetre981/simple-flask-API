@@ -1,26 +1,19 @@
-import requests
+from flask import render_template, request, redirect, url_for, make_response, jsonify
+from flask_login import current_user
+
+from .forms import LoginForm
+from .database import session
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from datetime import datetime
-from app import app
-from flask import jsonify
-from app import login_manager
-from app.forms import LoginForm, SignupForm
-from app.database import User, Event, session
+
 from .db_controls import add_new_item, get_events_by
-from flask import render_template, request, redirect, make_response
-from flask_login import login_user, login_required, logout_user, current_user
-
-
-def convert_time_to_object(time):
-    return datetime.strptime(time, "%H:%M").time()
-
-
-def convert_date_to_object(date):
-    return datetime.strptime(date, "%Y-%m-%d").date()
+from .database import User, Event
+from . import app, login_manager
 
 
 def add_event_to_database(event_data):
-    event_data["time"] = convert_time_to_object(event_data["time"])
-    event_data["date"] = convert_date_to_object(event_data["date"])
+    print(event_data)
     event_data["user"] = 1
     event = Event(**event_data)
     add_new_item(event)
@@ -34,6 +27,7 @@ def create_response(status_code):
 
 @app.route("/create_event", methods=["POST"])
 def create_event():
+    print(request)
     data_from_request = request.get_json()
     print(data_from_request)
     try:
@@ -48,10 +42,9 @@ def create_event():
 
 @app.route("/get_events_by_date/<date>", methods=["GET"])
 def get_events_by_date(date):
-    print(date)
-    date = datetime.fromisoformat(date)
-    data = get_events_by(date)
-    response = make_response(data)
+    print(date[:10])
+    data = get_events_by(date[:10])
+    response = make_response(jsonify(data))
     return response
 
 
@@ -61,44 +54,7 @@ def index():
     return render_template("main.html")
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    request_data = json.loads(request.data)
-    form = LoginForm()
-    if request.method == "POST":
-        name = form.nickname.data
-        password = form.password.data
-
-        # user = session.query(Student).where(Student.username == username).first()
-        user_check = session.query(User).where(User.nickname == name).first()
-
-        if not user_check:
-            print(name, password)
-            return render_template("main.html", message="Login Error!")
-
-        login_user(user_check)
-        return render_template("main.html")
-
-    return render_template("login.html", form=form)
-
-
-@app.route("/signup", methods=["GET", "POST"])
-def signup():
-    form = SignupForm()
-    if request.method == "POST":
-        name = form.nickname.data
-        password = form.password.data
-        email = form.email.data
-        new_user = User(str(name), str(password), str(email))
-
-        commit_new_item(new_user)
-        return render_template("main.html", message="Done!")
-
-    return render_template("signup.html", form=form)
-
-
 @app.route("/test")
-@login_required
 def test():
     import requests
 
@@ -111,19 +67,55 @@ def test():
 
     return render_template("main.html", data=data)
 
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return redirect("/")
 
 
-# @app.errorhandler(404)
-# @app.errorhandler(500)
-# @app.errorhandler(405)
-# def handler_error(e):
-#     return render_template("custom_error.html", error=e.code)
+@app.errorhandler(404)
+@app.errorhandler(500)
+@app.errorhandler(405)
+def handle_error(e):
+    return render_template("custom_error.html", error=e.code)
 
+
+@app.route("/signup", methods=["POST", "GET"])
+def signup():
+
+    if request.method == "POST":
+
+        nickname = request.form["nickname"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        user = session.query(User).where(User.nickname == nickname).first()
+        print(user)
+
+        if user:
+            return redirect(url_for("signup"))
+
+        new_user = User(nickname=nickname, email=email, password=generate_password_hash(password))
+        print(new_user)
+        session.add(new_user)
+        session.commit()
+        session.close()
+    return render_template("signup.html")
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data_from_request = request.get_json()
+
+    name = data_from_request["nickname"]
+    password = data_from_request["password"]
+
+    user_check = session.query(User).where(User.nickname == name).first()
+
+    if not user_check:
+        print(name, password)
+        response = make_response({"isLogged": False})
+        return response
+
+    if check_password_hash(user_check.password, password):
+        print(name, password)
+        response = make_response
 
 @login_manager.user_loader
 def load_user(user):
